@@ -14,7 +14,6 @@ type GameType = match.GameType
 type GameRequest = match.GameRequest
 
 func main() {
-	fmt.Println("Starting Game simulation")
 
 	coordinator := match.InitCoordinator()
 	fmt.Println(coordinator)
@@ -32,15 +31,20 @@ func main() {
 		splitted := strings.Split(s, " ")
 		i0, err0 := strconv.Atoi(splitted[0])
 		i1, err1 := strconv.Atoi(splitted[1])
-		if err0 == nil && err1 == nil {
-			gr := match.NewRequest(i0, g, i1, true)
+		i2, err2 := strconv.Atoi(splitted[2])
+		if err0 == nil && err1 == nil && err2 == nil {
+			gr := match.NewRequest(i0, g, i1, true, i2)
 			coordinator.Add(gr)
 		}
 	}
-
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(coordinator)
+
+	fmt.Println("Starting Game simulation")
+	coordinator.SimulateResult(2)
 
 	fmt.Println(coordinator)
 
