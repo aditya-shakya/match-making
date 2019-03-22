@@ -19,13 +19,13 @@ func (gameRequests byRank) Swap(i, j int) {
 	gameRequests[i], gameRequests[j] = gameRequests[j], gameRequests[i]
 }
 func (gameRequests byRank) Less(i, j int) bool {
-	if gameRequests[i].rank < gameRequests[j].rank {
-		return true
-	}
-	if gameRequests[i].rank > gameRequests[j].rank {
-		return false
-	}
-	return gameRequests[i].rank < gameRequests[j].rank
+	// if gameRequests[i].rank < gameRequests[j].rank {
+	// 	return true
+	// }
+	// if gameRequests[i].rank > gameRequests[j].rank {
+	// 	return false
+	// }
+	return gameRequests[i].rank > gameRequests[j].rank
 }
 
 func InitCoordinator() Coordinator {
@@ -53,8 +53,8 @@ func (c *Coordinator) Filter(n int, time int) []GameRequest {
 		}
 	}
 	sort.Sort(byRank(requests))
-	fmt.Print("filtered Queue: ")
-	fmt.Println(requests)
+	fmt.Printf("filtered Queue: %v\n", requests)
+
 	return requests
 }
 
@@ -64,20 +64,25 @@ func (c *Coordinator) ChooseGameSet(n int, time int, requests []GameRequest) {
 	fmt.Println(time)
 	requests = c.Filter(n, time)
 	if len(requests) < n {
+		fmt.Println("smallers size")
 		return
 	} else {
+		fmt.Println("looking for valid")
 		i := 0
-		for i < len(requests)-n {
+		for i < len(requests)-n+1 {
+			fmt.Println(i)
 			valid := true
 			for j := 0; j < n; j++ {
 				diff1 := requests[i].rank - requests[i+j].rank
 				diff2 := requests[i+j].rank - requests[i+n-1].rank
 				th := requests[i+j].Threshold(time)
+				fmt.Printf("i=%d j=%d diff1=%v diff2=%v th=%v\n", i, j, diff1, diff2, th)
 				if diff1 > th || diff2 > th {
 					valid = false
 					break
 				}
 			}
+			fmt.Println("i: ", valid)
 			if valid {
 				group := Group{}
 				for j := 0; j < n; j++ {

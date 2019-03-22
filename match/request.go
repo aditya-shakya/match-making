@@ -29,7 +29,7 @@ func NewRequest(id int, t GameType, time int, active bool, rank int) GameRequest
 
 func (gr *GameRequest) Threshold(time int) int {
 	tm := time - gr.createdAt
-	if tm > 5 {
+	if tm < 5 {
 		return 3
 	} else {
 		return time
